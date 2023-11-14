@@ -31,3 +31,14 @@ Analyze the provided code snippet, which will only contain AWS SDK calls, and cr
 {code}
 </codeSnippet>`,
 });
+
+export const GENERATE_POLICY_PROMPT = new PromptTemplate({
+  inputVariables: ['statements'],
+  template: `
+  Analyze the provided array of AWS Policy Statements and generate an AWS IAM policy for them. It needs to be a valid AWS IAM Policy.
+  Return only the JSON policy and nothing else.
+  
+  <statements>
+  {statements}
+  </statements>`,
+});

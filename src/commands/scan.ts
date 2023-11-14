@@ -27,7 +27,9 @@ scanCommand
       })
     );
 
-    console.log(policies);
+    policies.forEach(p => {
+      console.log(JSON.stringify(JSON.parse(p), null, 2));
+    });
   });
 
 export default scanCommand;
