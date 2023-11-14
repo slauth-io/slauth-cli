@@ -4,11 +4,13 @@
   "description": "CLI that scans directories for usage of aws-sdk and generated IAM Policies",
   "main": "index.js",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc",
     "prepare": "husky install",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ./src --ext ts,tsx",
     "lint-fix": "eslint ./src --ext ts,tsx --fix --cache",
-    "format": "prettier ./src --write"
+    "format": "prettier ./src --write",
+    "format-check": "prettier ./src --check"
   },
   "keywords": [],
   "author": "",
