@@ -1,5 +1,6 @@
 import { Command, Option } from 'commander';
 import path from 'path';
+import listFiles from '../utils/list-files';
 
 const scanCommand = new Command();
 scanCommand
@@ -17,6 +18,8 @@ scanCommand
   .action(async (pathArg, { cloudProvider }) => {
     const fullPath = path.resolve(process.cwd(), pathArg);
     console.log({ fullPath, cloudProvider });
+    const files = await listFiles(fullPath);
+    console.log(files);
   });
 
 export default scanCommand;
