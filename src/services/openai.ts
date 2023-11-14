@@ -1,36 +1,30 @@
 import { OpenAI } from 'langchain/llms/openai';
-import { LLMChain, SimpleSequentialChain } from 'langchain/chains';
+import parseJson from '../utils/parse-json';
 import {
   DETECT_STATEMENTS_PROMPT,
   GENERATE_POLICY_PROMPT,
 } from '../utils/prompts';
+import { PolicyDocument, Statement } from '../types/AWSPolicy';
 
-function getStatementGeneratorChain() {
-  const llm = new OpenAI({ temperature: 0 });
-  const chain = new LLMChain({
-    llm,
-    prompt: DETECT_STATEMENTS_PROMPT,
-  });
+const modelName = 'gpt-4-32k';
+const llm = new OpenAI({ temperature: 0, modelName });
 
-  return chain;
+export async function getStatementsFromCode(code: string) {
+  const result = await llm.call(
+    await DETECT_STATEMENTS_PROMPT.format({
+      code,
+    })
+  );
+
+  return parseJson<Statement[]>(result);
 }
 
-function getPolicyGeneratorChain() {
-  const llm = new OpenAI({ temperature: 0 });
-  const chain = new LLMChain({
-    llm,
-    prompt: GENERATE_POLICY_PROMPT,
-  });
+export async function getPoliciesFromStatements(statements: Statement[]) {
+  const result = await llm.call(
+    await GENERATE_POLICY_PROMPT.format({
+      statements: JSON.stringify(statements, null, 2),
+    })
+  );
 
-  return chain;
-}
-
-export async function generatePoliciesFromCode(code: string) {
-  const statementsChain = getStatementGeneratorChain();
-  const policyChain = getPolicyGeneratorChain();
-  const sequentialChain = new SimpleSequentialChain({
-    chains: [statementsChain, policyChain],
-  });
-
-  return await sequentialChain.run(code);
+  return parseJson<PolicyDocument>(result);
 }

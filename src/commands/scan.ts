@@ -1,7 +1,10 @@
 import { Command, Option } from 'commander';
 import path from 'path';
 import readDirectory from '../utils/read-directory';
-import { generatePoliciesFromCode } from '../services/openai';
+import {
+  getStatementsFromCode,
+  getPoliciesFromStatements,
+} from '../services/openai';
 
 const scanCommand = new Command();
 scanCommand
@@ -17,19 +20,24 @@ scanCommand
   )
   .argument('<path>', 'repository path')
   .action(async (pathArg, { cloudProvider }) => {
-    const fullPath = path.resolve(process.cwd(), pathArg);
-    console.log({ fullPath, cloudProvider });
-    const fileDocs = await readDirectory(fullPath);
+    try {
+      const fullPath = path.resolve(process.cwd(), pathArg);
+      console.log({ fullPath, cloudProvider });
+      const fileDocs = await readDirectory(fullPath);
 
-    const policies = await Promise.all(
-      fileDocs.map(async doc => {
-        return await generatePoliciesFromCode(doc.pageContent);
-      })
-    );
+      const statements = (
+        await Promise.all(
+          fileDocs.map(async doc => {
+            return await getStatementsFromCode(doc.pageContent);
+          })
+        )
+      ).flat();
 
-    policies.forEach(p => {
-      console.log(JSON.stringify(JSON.parse(p), null, 2));
-    });
+      const policies = await getPoliciesFromStatements(statements);
+      console.log(JSON.stringify(policies, null, 2));
+    } catch (err) {
+      console.error(err);
+    }
   });
 
 export default scanCommand;
