@@ -1,3 +1,5 @@
+#! /usr/bin/env node
+
 import 'dotenv/config';
 import { Command } from 'commander';
 import scanCommand from './commands/scan';

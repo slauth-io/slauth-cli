@@ -2,10 +2,14 @@
   "name": "slauth-cli",
   "version": "1.0.0",
   "description": "CLI that scans directories for usage of aws-sdk and generated IAM Policies",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "bin": {
+    "slauth": "dist/index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc",
+    "build-watch": "tsc --watch",
     "prepare": "husky install",
     "lint": "eslint ./src --ext ts,tsx",
     "lint-fix": "eslint ./src --ext ts,tsx --fix --cache",
