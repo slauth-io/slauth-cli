@@ -1,6 +1,7 @@
 import { Command, Option } from 'commander';
 import path from 'path';
-import listFiles from '../utils/list-files';
+import readDirectory from '../utils/read-directory';
+import { generatePoliciesFromCode } from '../services/openai';
 
 const scanCommand = new Command();
 scanCommand
@@ -18,8 +19,15 @@ scanCommand
   .action(async (pathArg, { cloudProvider }) => {
     const fullPath = path.resolve(process.cwd(), pathArg);
     console.log({ fullPath, cloudProvider });
-    const files = await listFiles(fullPath);
-    console.log(files);
+    const fileDocs = await readDirectory(fullPath);
+
+    const policies = await Promise.all(
+      fileDocs.map(async doc => {
+        return await generatePoliciesFromCode(doc.pageContent);
+      })
+    );
+
+    console.log(policies);
   });
 
 export default scanCommand;
