@@ -1,6 +1,8 @@
 import { Command, Option } from 'commander';
 import path from 'path';
+import spinners from 'cli-spinners';
 import readDirectory from '../utils/read-directory';
+import showAsyncSpinner from '../utils/show-async-spinner';
 import {
   getStatementsFromCode,
   getPoliciesFromStatements,
@@ -22,22 +24,34 @@ scanCommand
   .action(async (pathArg, { cloudProvider }) => {
     try {
       const fullPath = path.resolve(process.cwd(), pathArg);
-      console.log({ fullPath, cloudProvider });
-      const fileDocs = await readDirectory(fullPath);
+      const scanPromise = scan(fullPath, cloudProvider);
+      await showAsyncSpinner(
+        {
+          spinner: spinners.simpleDotsScrolling,
+          text: 'Scanning your repository',
+        },
+        scanPromise
+      );
+      const policies = await scanPromise;
 
-      const statements = (
-        await Promise.all(
-          fileDocs.map(async doc => {
-            return await getStatementsFromCode(doc.pageContent);
-          })
-        )
-      ).flat();
-
-      const policies = await getPoliciesFromStatements(statements);
       console.log(JSON.stringify(policies, null, 2));
     } catch (err) {
       console.error(err);
     }
   });
+
+async function scan(fullPath: string, cloudProvider: string) {
+  console.log({ fullPath, cloudProvider });
+  const fileDocs = await readDirectory(fullPath);
+  const statements = (
+    await Promise.all(
+      fileDocs.map(async doc => {
+        return await getStatementsFromCode(doc.pageContent);
+      })
+    )
+  ).flat();
+
+  return await getPoliciesFromStatements(statements);
+}
 
 export default scanCommand;
