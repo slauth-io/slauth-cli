@@ -1,4 +1,5 @@
 import { Command, Option } from 'commander';
+import path from 'path';
 
 const scanCommand = new Command();
 
@@ -14,8 +15,9 @@ scanCommand
       .makeOptionMandatory(true)
   )
   .argument('<path>', 'repository path')
-  .action((path, options) => {
-    console.log('scan', { path, options });
+  .action((pathArg, { cloudProvider }) => {
+    const fullPath = path.resolve(process.cwd(), pathArg);
+    console.log({ fullPath, cloudProvider });
   });
 
 export default scanCommand;
