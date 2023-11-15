@@ -1,19 +1,20 @@
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { JsonOutputFunctionsParser } from 'langchain/output_parsers';
 import JSONSchemas from '../utils/json-schemas';
-import {
-  AWS_DETECT_STATEMENTS_PROMPT,
-  AWS_GENERATE_POLICIES_PROMPT,
-} from '../utils/prompts';
+import prompts from '../utils/prompts';
 import {
   PolicyDocumentsOpenAIResult,
   Statement,
   StatementOpenAIResult,
 } from '../types/aws-policy';
+import CloudProviders from '../types/cloud-providers';
 
 const modelName = 'gpt-4-32k';
 
-export async function getStatementsFromCode(code: string) {
+export async function getStatementsFromCode(
+  code: string,
+  cloudProvider: keyof typeof CloudProviders
+) {
   const llm = new ChatOpenAI({ modelName, temperature: 0 });
   const functionCallingModel = llm.bind({
     functions: [
@@ -30,7 +31,9 @@ export async function getStatementsFromCode(code: string) {
 
   const outputParser = new JsonOutputFunctionsParser();
   const chain =
-    AWS_DETECT_STATEMENTS_PROMPT.pipe(functionCallingModel).pipe(outputParser);
+    prompts[cloudProvider].DETECT_STATEMENTS_PROMPT.pipe(
+      functionCallingModel
+    ).pipe(outputParser);
 
   const response = (await chain.invoke({
     code,
@@ -39,7 +42,10 @@ export async function getStatementsFromCode(code: string) {
   return response.statements;
 }
 
-export async function getPoliciesFromStatements(statements: Statement[]) {
+export async function getPoliciesFromStatements(
+  statements: Statement[],
+  cloudProvider: keyof typeof CloudProviders
+) {
   if (!statements.length) {
     return;
   }
@@ -60,7 +66,9 @@ export async function getPoliciesFromStatements(statements: Statement[]) {
 
   const outputParser = new JsonOutputFunctionsParser();
   const chain =
-    AWS_GENERATE_POLICIES_PROMPT.pipe(functionCallingModel).pipe(outputParser);
+    prompts[cloudProvider].GENERATE_POLICIES_PROMPT.pipe(
+      functionCallingModel
+    ).pipe(outputParser);
 
   const response = (await chain.invoke({
     statements: JSON.stringify(statements, null, 2),

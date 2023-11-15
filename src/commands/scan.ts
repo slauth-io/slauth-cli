@@ -3,6 +3,7 @@ import path from 'path';
 import spinners from 'cli-spinners';
 import readDirectory from '../utils/read-directory';
 import showAsyncSpinner from '../utils/show-async-spinner';
+import CloudProviders from '../types/cloud-providers';
 import {
   getStatementsFromCode,
   getPoliciesFromStatements,
@@ -17,7 +18,7 @@ scanCommand
       '-p, --cloud-provider <cloudProvider>',
       'select the cloud provider you would like to generate policies for'
     )
-      .choices(['aws'])
+      .choices(Object.values(CloudProviders))
       .makeOptionMandatory(true)
   )
   .argument('<path>', 'repository path')
@@ -44,18 +45,20 @@ scanCommand
     }
   });
 
-async function scan(fullPath: string, cloudProvider: string) {
-  console.log({ fullPath, cloudProvider });
+async function scan(
+  fullPath: string,
+  cloudProvider: keyof typeof CloudProviders
+) {
   const fileDocs = await readDirectory(fullPath);
   const statements = (
     await Promise.all(
       fileDocs.map(async doc => {
-        return await getStatementsFromCode(doc.pageContent);
+        return await getStatementsFromCode(doc.pageContent, cloudProvider);
       })
     )
   ).flat();
 
-  return await getPoliciesFromStatements(statements);
+  return await getPoliciesFromStatements(statements, cloudProvider);
 }
 
 export default scanCommand;
