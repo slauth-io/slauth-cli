@@ -34,7 +34,11 @@ scanCommand
       );
       const policies = await scanPromise;
 
-      console.log(JSON.stringify(policies, null, 2));
+      if (policies) {
+        console.log(JSON.stringify(policies, null, 2));
+      } else {
+        console.log('No policies have been detected');
+      }
     } catch (err) {
       console.error(err);
     }

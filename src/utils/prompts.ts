@@ -1,8 +1,10 @@
-import { PromptTemplate } from 'langchain/prompts';
+import {
+  ChatPromptTemplate,
+  SystemMessagePromptTemplate,
+  HumanMessagePromptTemplate,
+} from 'langchain/prompts';
 
-export const DETECT_STATEMENTS_PROMPT = new PromptTemplate({
-  inputVariables: ['code'],
-  template: `
+const AWS_DETECT_STATEMENTS_SYSTEM = `
 Analyze the provided code snippet, which will only contain AWS SDK calls, and create an array of AWS policy statements (with Effect, Action, and Resource) necessary for running the code. Follow these rules:
 
 1. Include only the necessary permissions to execute the code present in the snippet.
@@ -19,26 +21,33 @@ Analyze the provided code snippet, which will only contain AWS SDK calls, and cr
 
 7. If there are multiple ways to do it, choose the simplest one.
 
-8. Return **only** the JSON array of policy statements and nothing else. The response needs to be parsed by JSON.parse() in Node.js.
+8. **Do not make assumptions about the use of AWS services. If the code snippet does not explicitly indicate the use of an AWS service, return an empty array.**
 
-9. **Do not make assumptions about the use of AWS services. If the code snippet does not explicitly indicate the use of an AWS service, return an empty array.**
+9. **Ensure that the generated policy statements are valid AWS IAM policy statements and can only include permissions for existing AWS Services. Do not include permissions for services from other cloud providers, such as Google Cloud Platform or Microsoft Azure.**
 
-10. **Ensure that the generated policy statements are valid AWS IAM policy statements and can only include permissions for existing AWS Services. Do not include permissions for services from other cloud providers, such as Google Cloud Platform or Microsoft Azure.**
+** Very important! **: Ensure that the generated policy statements are valid AWS IAM policy statements and can only include permissions for existing AWS Services.`;
 
-** Very important! **: Ensure that the generated policy statements are valid AWS IAM policy statements and can only include permissions for existing AWS Services.
-
-<codeSnippet>
-{code}
-</codeSnippet>`,
+export const AWS_DETECT_STATEMENTS_PROMPT = new ChatPromptTemplate({
+  promptMessages: [
+    SystemMessagePromptTemplate.fromTemplate(AWS_DETECT_STATEMENTS_SYSTEM),
+    HumanMessagePromptTemplate.fromTemplate(`
+    <codeSnippet>
+    {code}
+    </codeSnippet>`),
+  ],
+  inputVariables: ['code'],
 });
 
-export const GENERATE_POLICY_PROMPT = new PromptTemplate({
+export const AWS_GENERATE_POLICIES_PROMPT = new ChatPromptTemplate({
+  promptMessages: [
+    SystemMessagePromptTemplate.fromTemplate(
+      'Analyze the provided array of AWS Policy Statements and generate an AWS IAM policy for them. It needs to be a valid AWS IAM Policy. Return only the JSON policy and nothing else.'
+    ),
+    HumanMessagePromptTemplate.fromTemplate(`
+    <statements>
+    {statements}
+    </statements>
+    `),
+  ],
   inputVariables: ['statements'],
-  template: `
-  Analyze the provided array of AWS Policy Statements and generate an AWS IAM policy for them. It needs to be a valid AWS IAM Policy.
-  Return only the JSON policy and nothing else.
-  
-  <statements>
-  {statements}
-  </statements>`,
 });
