@@ -4,6 +4,7 @@ import spinners from 'cli-spinners';
 import readDirectory from '../utils/read-directory';
 import showAsyncSpinner from '../utils/show-async-spinner';
 import CloudProviders from '../types/cloud-providers';
+import { blue, yellow, red } from '../utils/colors';
 import {
   getStatementsFromCode,
   getPoliciesFromStatements,
@@ -28,7 +29,7 @@ scanCommand
       const scanPromise = scan(fullPath, cloudProvider);
       await showAsyncSpinner(
         {
-          spinner: spinners.simpleDotsScrolling,
+          spinner: spinners.bouncingBar,
           text: 'Scanning your repository',
         },
         scanPromise
@@ -36,12 +37,13 @@ scanCommand
       const policies = await scanPromise;
 
       if (policies) {
+        console.log(blue('Detected Policies:\n'));
         console.log(JSON.stringify(policies, null, 2));
       } else {
-        console.log('No policies have been detected');
+        console.log(yellow('No policies have been detected'));
       }
     } catch (err) {
-      console.error(err);
+      console.error(red(err));
     }
   });
 
