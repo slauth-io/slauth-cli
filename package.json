@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx tsc",
+    "build": "tsc --removeComments",
     "build-watch": "tsc --watch",
     "prepare": "husky install",
     "lint": "eslint ./src --ext ts,tsx",
