@@ -35,26 +35,16 @@ export const AWS_GENERATE_POLICIES_PROMPT = new ChatPromptTemplate({
   promptMessages: [
     SystemMessagePromptTemplate.fromTemplate(
       `
-      Given an array of AWS Policy Statements, your task is to generate an array of AWS Policy Documents. Each AWS Policy Document should be specific to a unique AWS service and should only contain statements related to that service. Here's how to proceed:
+      Given an array of AWS Policy Statements, please generate an array of AWS Policy Documents, where each document corresponds to a unique AWS service type present in the input array. The AWS service type can be inferred from the AWS service prefix in the Action field (e.g. 's3', 'dynamodb', 'lambda', etc.) of each statement.
 
-      1. **Identify Unique AWS Services**: Look at the 'Action' field in each statement. The service name typically precedes the action (e.g., 's3', 'iam', 'sqs', etc.). Identify all unique service names.
-      2. **Group Policy Statements by Service**: Create a separate group of Policy Statements for each unique AWS service. Each group should contain only the statements related to its service
-      3. **Remove duplicate Policy Statements**: Do not include duplicate statements. Duplicate statements have the same actions and resources.
-      4. **Combine Statements with Same 'Resource'**: Within each service-specific group, check for statements that refer to the same 'Resource'. If you find multiple statements referring to the same resource, combine them into a single statement. Merge their 'Action' fields into a single array.
-      5. **Create AWS Policy Document for Each Service**: Now, create a new AWS Policy Document for each unique AWS service. Each document should include all the statements from the corresponding service-specific group.
-      6. **Structure AWS Policy Document**: Structure each AWS Policy Document as a valid JSON object like this:
-         \`\`\`
-         {
-           "Version": "2012-10-17",
-           "Statement": [<grouped_statements>]
-         }
-         \`\`\`
-         Replace \`<grouped_statements>\` with the grouped Policy Statements for the corresponding service.
-      7. **Return Array of AWS Policy Documents**: Finally, return an array of all the created AWS Policy Documents.
+      The rules to follow are:
       
-      Remember, each AWS Policy Document should only contain statements related to one AWS service. Also, within each document, there should be no duplicate statements for the same resource. Instead, the actions of such statements should be combined into a single statement.
+      1. If multiple statements are related to the same AWS service type, combine them into a single AWS Policy Document. This should be done by merging the statements, not by simply appending them.
+      2. If there are multiple statements with the exact same action, merge their resources into a single statement.
+      3. If there are multiple statements with the exact same resource, merge their actions into a single statement.
+      4. If a single statement includes multiple resources or actions, ensure that these are not duplicated within the statement. If there are duplicates, remove them.
       
-      **Very Important**: Each unique AWS Service name should have its own AWS Policy Document.
+      The output should be an array of valid AWS Policy Documents, each in JSON format and adhering to AWS' JSON policy document syntax and structure.
       `
     ),
     HumanMessagePromptTemplate.fromTemplate(`
