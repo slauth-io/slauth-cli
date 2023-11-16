@@ -7,6 +7,12 @@ function showCursor() {
 
 function hideCursor() {
   process.stdout.write('\u001B[?25l');
+
+  // This allows to show the cursor when the user clicks CTRL+C
+  process.on('SIGINT', () => {
+    showCursor();
+    process.exit();
+  });
 }
 
 export default async function showAsyncSpinner(
@@ -17,6 +23,7 @@ export default async function showAsyncSpinner(
 
   process.stdout.write('\n');
   hideCursor();
+
   const i = setInterval(() => {
     if (frameIndex < opts.spinner.frames.length) {
       process.stdout.write(
