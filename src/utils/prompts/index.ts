@@ -1,4 +1,4 @@
-import CloudProviders from '../../types/cloud-providers';
+import CloudProviders from '../cloud-providers';
 import { ChatPromptTemplate } from 'langchain/prompts';
 import {
   AWS_DETECT_STATEMENTS_PROMPT,

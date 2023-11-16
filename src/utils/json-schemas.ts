@@ -1,11 +1,12 @@
 import { zodToJsonSchema } from 'zod-to-json-schema';
-import { zodSchemas } from '../types/aws-policy';
+import {
+  StatementsOpenAIResultSchema,
+  PolicyDocumentsOpenAIResultSchema,
+} from '../types/zod-aws-policy';
 
 export default {
-  statementsOpenAIResultSchema: zodToJsonSchema(
-    zodSchemas.zodStatementsOpenAIResultSchema
-  ),
+  statementsOpenAIResultSchema: zodToJsonSchema(StatementsOpenAIResultSchema),
   policyDocumentsOpenAIResultSchema: zodToJsonSchema(
-    zodSchemas.zodPolicyDocumentsOpenAIResultSchema
+    PolicyDocumentsOpenAIResultSchema
   ),
 };

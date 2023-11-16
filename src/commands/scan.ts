@@ -3,7 +3,7 @@ import path from 'path';
 import spinners from 'cli-spinners';
 import readDirectory from '../utils/read-directory';
 import showAsyncSpinner from '../utils/show-async-spinner';
-import CloudProviders from '../types/cloud-providers';
+import CloudProviders from '../utils/cloud-providers';
 import { yellow, red, green } from '../utils/colors';
 import writeToFile from '../utils/write-to-file';
 import {
