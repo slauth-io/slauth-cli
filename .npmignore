@@ -1,0 +1,13 @@
+.env
+.env.example
+.eslintcache
+.eslintignore
+.eslintrc.json
+.github
+.husky
+.prettierignore
+.prettierrc
+.vscode
+tsconfig.json
+tsconfig.tsbuildinfo
+src
