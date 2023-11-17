@@ -4,7 +4,9 @@ CLI that scans repositories and generates the necessary IAM Policies for the ser
 
 ## Installation
 
-Run `npm install -g @slauth.io/slauth`
+```bash
+npm install -g @slauth.io/slauth
+```
 
 ## Usage
 
