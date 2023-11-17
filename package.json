@@ -1,6 +1,6 @@
 {
   "name": "@slauth.io/slauth",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "CLI that scans directories for usage of aws-sdk and generated IAM Policies",
   "main": "dist/index.js",
   "bin": {
@@ -16,9 +16,18 @@
     "format": "prettier ./src --write",
     "format-check": "prettier ./src --check"
   },
-  "keywords": ["cli", "aws", "iam", "policies", "llm", "openai"],
+  "keywords": [
+    "cli",
+    "aws",
+    "iam",
+    "policies",
+    "llm",
+    "openai"
+  ],
   "license": "MIT",
   "devDependencies": {
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/npm": "^11.0.1",
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@typescript-eslint/parser": "^6.10.0",
     "eslint": "^8.53.0",
