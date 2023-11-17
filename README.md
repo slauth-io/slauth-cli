@@ -1,6 +1,10 @@
-# slauth-cli
+# Slauth.io
 
 CLI that scans repositories and generates the necessary IAM Policies for the service to run.
+
+## Installation
+
+Run `npm install -g @slauth.io/slauth`
 
 ## Usage
 
