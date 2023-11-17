@@ -20,7 +20,7 @@ export const AWS_DETECT_STATEMENTS_PROMPT = new ChatPromptTemplate({
       8. **Do not make assumptions about the use of AWS services. If the code snippet does not explicitly indicate the use of an AWS service, return an empty array.**
       9. **Ensure that the generated policy statements are valid AWS IAM policy statements and can only include permissions for existing AWS Services. Do not include permissions for services from other cloud providers, such as Google Cloud Platform or Microsoft Azure.**
       
-      ** Very important! **: Ensure that the generated policy statements are valid AWS IAM policy statements and can only include permissions for existing AWS Services.
+      ** Very important! **: Ensure that the generated policy statements are valid AWS IAM policy statements and can only include permissions for existing AWS Services, do not include any permissions for services of any other cloud providers such as Google Cloud Platform or Microsoft Azure.
       `
     ),
     HumanMessagePromptTemplate.fromTemplate(`
