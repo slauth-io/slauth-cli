@@ -1,4 +1,4 @@
-# Slauth.io
+# <p align="center"><img src="./static/images/slauth-logo.png" alt="drawing"/></p>
 
 CLI that scans repositories and generates the necessary IAM Policies for the service to run.
 
