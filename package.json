@@ -2,7 +2,7 @@
   "name": "@slauth.io/slauth",
   "version": "1.1.0",
   "description": "CLI that scans directories for usage of aws-sdk and generated IAM Policies",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "publishConfig": {
     "access": "public"
   },
@@ -11,7 +11,7 @@
     "url": "git+https://github.com/slauth-io/slauth-cli"
   },
   "bin": {
-    "slauth": "dist/index.js"
+    "slauth": "dist/src/index.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
