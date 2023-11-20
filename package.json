@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/slauth-io/slauth-cli"
+    "url": "git+https://github.com/slauth-io/slauth-cli.git"
   },
   "bin": {
     "slauth": "dist/index.js"
