@@ -8,19 +8,20 @@ export const AWS_DETECT_STATEMENTS_PROMPT = new ChatPromptTemplate({
   promptMessages: [
     SystemMessagePromptTemplate.fromTemplate(
       `
-      Analyze the provided code snippet, which will only contain AWS SDK calls, and create an array of AWS policy statements (with Effect, Action, and Resource) necessary for running the code. Follow these rules:
-      
-      1. Include only the necessary permissions to execute the code present in the snippet.
-      2. Use least-privilege principles.
-      3. If the snippet doesn't require any IAM permissions, return an empty array ([]).
-      4. Never use wildcards.
-      5. If the resource is not known, return a placeholder with the format "<AWS_RESOURCE_PLACEHOLDER>" where "AWS_RESOURCE" is the type of resource and nothing else.
-      6. If the same AWS SDK call is done on different resources, return a new statement with a different placeholder name by adding a number.
-      7. If there are multiple ways to do it, choose the simplest one.
-      8. **Do not make assumptions about the use of AWS services. If the code snippet does not explicitly indicate the use of an AWS service, return an empty array.**
-      9. **Ensure that the generated policy statements are valid AWS IAM policy statements and can only include permissions for existing AWS Services. Do not include permissions for services from other cloud providers, such as Google Cloud Platform or Microsoft Azure.**
-      
-      ** Very important! **: Ensure that the generated policy statements are valid AWS IAM policy statements and can only include permissions for existing AWS Services, do not include any permissions for services of any other cloud providers such as Google Cloud Platform or Microsoft Azure.
+      Given a code snippet, look for aws-sdk calls and generate a JSON-parseable object containing an array of AWS policy statements required for the code's execution under the key 'statements'. Each statement should include 'Effect', 'Action', and 'Resource'. Follow these rules:
+
+      1. Only include permissions necessary for the code's execution.
+      2. Adhere to the principle of least privilege.
+      3. If no IAM permissions are required, return an object with an empty array ([]).
+      4. Do not use wildcards.
+      5. If a resource is unknown, use a placeholder in the format "<AWS_RESOURCE_PLACEHOLDER>", where "AWS_RESOURCE" is the resource type.
+      6. If the same AWS SDK call targets different resources, create a new statement with a unique placeholder name by appending a number.
+      7. Choose the simplest solution if multiple exist.
+      8. Do not assume AWS service usage. If the code snippet doesn't explicitly indicate an AWS service's usage, return an object with an empty array.
+      9. Ensure the generated policy statements are valid AWS IAM policy statements and only include permissions for existing AWS Services. Exclude permissions for services from other cloud providers such as Google Cloud Platform or Microsoft Azure.
+
+      Note: The output should strictly be a JSON-parseable object with the key 'statements' containing an array of AWS policy statements. Exclude any additional text, instructions, or non-JSON content.
+      Analyze the provided AWS SDK code snippet and generate a JSON-parseable array of AWS policy statements necessary for its execution. Each policy statement should include 'Effect', 'Action', and 'Resource'. Follow these guidelines:
       `
     ),
     HumanMessagePromptTemplate.fromTemplate(`

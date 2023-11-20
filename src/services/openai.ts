@@ -21,7 +21,8 @@ export async function getStatementsFromCode(
     functions: [
       {
         name: 'statements_output_formatter',
-        description: 'Should always be used to properly format output',
+        description:
+          "Formats the output to be an JSON-parseable object containing an array of AWS policy statements under the key 'statements'",
         parameters: JSONSchemas.statementsOpenAIResultSchema,
       },
     ],
@@ -58,7 +59,8 @@ export async function getPoliciesFromStatements(
     functions: [
       {
         name: 'policy_documents_output_formatter',
-        description: 'Should always be used to properly format output',
+        description:
+          "Formats the output to be an JSON-parseable object containing an array of AWS policy documents under the key 'policyDocuments'",
         parameters: JSONSchemas.policyDocumentsOpenAIResultSchema,
       },
     ],
