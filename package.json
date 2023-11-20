@@ -23,7 +23,7 @@
     "format": "prettier ./src --write",
     "format-check": "prettier ./src --check",
     "prepack": "npm run build",
-    "postversion": "./scripts/update-version.sh"
+    "postversion": "npm run build"
   },
   "keywords": [
     "cli",
