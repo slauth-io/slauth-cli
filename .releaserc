@@ -12,7 +12,7 @@
       {
         "assets": [
           "package.json",
-          "src"
+          "src/version.ts"
         ],
         "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
