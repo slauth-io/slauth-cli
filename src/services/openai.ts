@@ -9,12 +9,14 @@ import {
   PolicyDocumentsOpenAIResultSchema,
 } from '../types/zod-aws-policy';
 import CloudProviders from '../utils/cloud-providers';
+import OpenAIModels from '../utils/models';
 
-const modelName = 'gpt-4-32k';
+const defaultModelName = OpenAIModels['gpt-4-32k'];
 
 export async function getStatementsFromCode(
   code: string,
-  cloudProvider: keyof typeof CloudProviders
+  cloudProvider: keyof typeof CloudProviders,
+  modelName: keyof typeof OpenAIModels = defaultModelName
 ) {
   const llm = new ChatOpenAI({ modelName, temperature: 0 });
   const functionCallingModel = llm.bind({
@@ -48,7 +50,8 @@ export async function getStatementsFromCode(
 
 export async function getPoliciesFromStatements(
   statements: z.infer<typeof StatementArraySchema>,
-  cloudProvider: keyof typeof CloudProviders
+  cloudProvider: keyof typeof CloudProviders,
+  modelName: keyof typeof OpenAIModels = defaultModelName
 ) {
   if (!statements.length) {
     return;
