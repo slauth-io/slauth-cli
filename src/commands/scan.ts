@@ -38,15 +38,7 @@ scanCommand
   .action(async (pathArg, { cloudProvider, openaiModel, outputFile }) => {
     try {
       const fullPath = path.resolve(process.cwd(), pathArg);
-      const scanPromise = scan(fullPath, cloudProvider, openaiModel);
-      await showAsyncSpinner(
-        {
-          spinner: spinners.bouncingBar,
-          text: 'Scanning your repository',
-        },
-        scanPromise
-      );
-      const policies = await scanPromise;
+      const policies = await scan(fullPath, cloudProvider, openaiModel);
 
       if (policies) {
         const policiesJsonString = JSON.stringify(policies, null, 2);
@@ -73,20 +65,57 @@ async function scan(
   cloudProvider: keyof typeof CloudProviders,
   modelName?: keyof typeof OpenAIModels
 ) {
-  const fileDocs = await readDirectory(fullPath);
-  const statements = (
-    await Promise.all(
-      fileDocs.map(async doc => {
-        return await getStatementsFromCode(
-          doc.pageContent,
-          cloudProvider,
-          modelName
-        );
-      })
-    )
-  ).flat();
+  const readDirectoryPromise = readDirectory(fullPath);
 
-  return await getPoliciesFromStatements(statements, cloudProvider, modelName);
+  await showAsyncSpinner(
+    {
+      spinner: spinners.dots,
+      text: yellow('Reading repository'),
+    },
+    readDirectoryPromise
+  );
+
+  const fileDocs = await readDirectoryPromise;
+
+  const statementsPromises = Promise.all(
+    fileDocs.map(async doc => {
+      return await getStatementsFromCode(
+        doc.pageContent,
+        cloudProvider,
+        modelName
+      );
+    })
+  );
+
+  await showAsyncSpinner(
+    {
+      spinner: spinners.dots,
+      text: yellow(
+        'Scanning for aws-sdk calls (this process might take a few minutes)'
+      ),
+    },
+    statementsPromises
+  );
+
+  const statements = (await statementsPromises).flat();
+
+  const policiesPromise = getPoliciesFromStatements(
+    statements,
+    cloudProvider,
+    modelName
+  );
+
+  await showAsyncSpinner(
+    {
+      spinner: spinners.dots,
+      text: yellow(
+        'Generating policies (this process might take a few minutes)'
+      ),
+    },
+    policiesPromise
+  );
+
+  return await policiesPromise;
 }
 
 export default scanCommand;

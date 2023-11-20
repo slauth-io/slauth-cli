@@ -21,13 +21,12 @@ export default async function showAsyncSpinner(
 ) {
   let frameIndex = 0;
 
-  process.stdout.write('\n');
   hideCursor();
 
   const i = setInterval(() => {
     if (frameIndex < opts.spinner.frames.length) {
       process.stdout.write(
-        `${opts.text ? opts.text + ' ' : ''}${opts.spinner.frames[frameIndex]}`
+        `${opts.spinner.frames[frameIndex]}${opts.text ? ' ' + opts.text : ''}`
       );
       frameIndex++;
     } else {
@@ -45,6 +44,5 @@ export default async function showAsyncSpinner(
 
   clearInterval(i);
   rdl.clearLine(process.stdout, 0);
-  process.stdout.write('\n');
   showCursor();
 }
