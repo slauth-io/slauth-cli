@@ -21,6 +21,21 @@ npm install -g @slauth.io/slauth
 slauth scan -p aws ./path/to/my/repository
 ```
 
+### Selecting which OpenAI Model to use
+
+By default `slauth` will use `gpt-4-32k` as it provides the best results. You can still choose to use other models to scan you repo, specially if cost is a concern:
+
+To choose a different model, use the `-m` option of the `scan` command
+
+```bash
+slauth scan -p aws -m gpt-3.5-turbo-16k ./path/to/my/repository
+```
+
+Available models:
+
+- `gpt-3.5-turbo-16k`
+- `gpt-4-32k` (default)
+
 ## Development
 
 1. Set your `OPENAI_API_KEY` in the `.env` file at the root of the project

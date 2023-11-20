@@ -4,6 +4,7 @@ import spinners from 'cli-spinners';
 import readDirectory from '../utils/read-directory';
 import showAsyncSpinner from '../utils/show-async-spinner';
 import CloudProviders from '../utils/cloud-providers';
+import OpenAIModels from '../utils/models';
 import { yellow, red, green } from '../utils/colors';
 import writeToFile from '../utils/write-to-file';
 import {
@@ -23,15 +24,21 @@ scanCommand
       .choices(Object.values(CloudProviders))
       .makeOptionMandatory(true)
   )
+  .addOption(
+    new Option(
+      '-m, --openai-model <openaiModel>',
+      'select the openai model to use'
+    ).choices(Object.values(OpenAIModels))
+  )
   .option(
     '-o, --output-file <outputFile>',
     'write generated policies to a file instead of stdout'
   )
   .argument('<path>', 'repository path')
-  .action(async (pathArg, { cloudProvider, outputFile }) => {
+  .action(async (pathArg, { cloudProvider, openaiModel, outputFile }) => {
     try {
       const fullPath = path.resolve(process.cwd(), pathArg);
-      const scanPromise = scan(fullPath, cloudProvider);
+      const scanPromise = scan(fullPath, cloudProvider, openaiModel);
       await showAsyncSpinner(
         {
           spinner: spinners.bouncingBar,
@@ -63,18 +70,23 @@ scanCommand
 
 async function scan(
   fullPath: string,
-  cloudProvider: keyof typeof CloudProviders
+  cloudProvider: keyof typeof CloudProviders,
+  modelName?: keyof typeof OpenAIModels
 ) {
   const fileDocs = await readDirectory(fullPath);
   const statements = (
     await Promise.all(
       fileDocs.map(async doc => {
-        return await getStatementsFromCode(doc.pageContent, cloudProvider);
+        return await getStatementsFromCode(
+          doc.pageContent,
+          cloudProvider,
+          modelName
+        );
       })
     )
   ).flat();
 
-  return await getPoliciesFromStatements(statements, cloudProvider);
+  return await getPoliciesFromStatements(statements, cloudProvider, modelName);
 }
 
 export default scanCommand;
