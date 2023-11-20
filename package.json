@@ -22,7 +22,8 @@
     "lint-fix": "eslint ./src --ext ts,tsx --fix --cache",
     "format": "prettier ./src --write",
     "format-check": "prettier ./src --check",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "postversion": "./scripts/update-version.sh"
   },
   "keywords": [
     "cli",
