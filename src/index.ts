@@ -4,7 +4,7 @@ import 'dotenv/config';
 import { Command } from 'commander';
 import scanCommand from './commands/scan';
 import { coloredLogo } from './utils/print-ascii-logo';
-import { version } from '../package.json';
+import version from './version';
 
 const program = new Command();
 program
