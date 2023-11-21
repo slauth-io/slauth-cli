@@ -7,6 +7,7 @@ import CloudProviders from '../utils/cloud-providers';
 import OpenAIModels from '../utils/models';
 import { yellow, red, green } from '../utils/colors';
 import writeToFile from '../utils/write-to-file';
+import isGitRepository from '../utils/is-git-repository';
 import {
   getStatementsFromCode,
   getPoliciesFromStatements,
@@ -65,6 +66,10 @@ async function scan(
   cloudProvider: keyof typeof CloudProviders,
   modelName?: keyof typeof OpenAIModels
 ) {
+  if (!isGitRepository(fullPath)) {
+    throw new Error('Directory needs to be a Git repository');
+  }
+
   const readDirectoryPromise = readDirectory(fullPath);
 
   await showAsyncSpinner(
