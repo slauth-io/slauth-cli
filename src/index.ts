@@ -14,4 +14,7 @@ program
   .version(version)
   .parseAsync(process.argv);
 
+// Exports
 export { default as Prompts } from './utils/prompts';
+export { default as JSONSchemas } from './utils/json-schemas';
+export * as ZodSchemas from './types/zod-aws-policy';
