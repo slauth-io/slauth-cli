@@ -13,3 +13,5 @@ program
   .addHelpText(`beforeAll`, coloredLogo)
   .version(version)
   .parseAsync(process.argv);
+
+export { default as Prompts } from './utils/prompts';
