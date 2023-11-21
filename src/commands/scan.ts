@@ -3,14 +3,14 @@ import path from 'path';
 import spinners from 'cli-spinners';
 import readDirectory from '../utils/read-directory';
 import showAsyncSpinner from '../utils/show-async-spinner';
-import CloudProviders from '../utils/cloud-providers';
-import OpenAIModels from '../utils/models';
 import { yellow, red, green } from '../utils/colors';
 import writeToFile from '../utils/write-to-file';
 import {
   getStatementsFromCode,
   getPoliciesFromStatements,
-} from '../services/openai';
+  CloudProviders,
+  OpenAIModels,
+} from '@slauth.io/langchain-wrapper';
 
 const scanCommand = new Command();
 scanCommand

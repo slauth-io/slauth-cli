@@ -2,8 +2,7 @@ import { existsSync } from 'fs';
 import { stat, readdir } from 'fs/promises';
 import path from 'path';
 import { programmingLanguageExtensions } from './language-extensions';
-import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
-import { TextLoader } from 'langchain/document_loaders/fs/text';
+import { LangChain } from '@slauth.io/langchain-wrapper';
 
 const FILE_FILTER_REGEX = /(package.*\.json|.*\.d.ts|node_modules\/.*)$/g;
 const DOT_PATH_REGEX = /\/\..+/g;
@@ -57,15 +56,16 @@ async function listFiles(directoryOrFilePath: string): Promise<string[]> {
 
 export default async function readDirectory(dirPath: string) {
   const files = await listFiles(dirPath);
-  const textSplitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 5000,
-    chunkOverlap: 1000,
-  });
+  const textSplitter =
+    new LangChain.TextSplitters.RecursiveCharacterTextSplitter({
+      chunkSize: 5000,
+      chunkOverlap: 1000,
+    });
 
   const docs = (
     await Promise.all(
       files.map(async f => {
-        const textLoader = new TextLoader(f);
+        const textLoader = new LangChain.TextLoader(f);
         return await textLoader.loadAndSplit(textSplitter);
       })
     )
