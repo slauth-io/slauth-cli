@@ -112,6 +112,48 @@ Available models:
 - `gpt-3.5-turbo-16k`
 - `gpt-4-32k` (default)
 
+### Running in CI/CD
+
+Slauth being a CLI, it can be easily integrated in your CI/CD pipelines.
+
+#### Github Action Example
+
+In this GitHub action workflow we install Slauth, run it and then output the resulting policies to an artifact which can then be downloaded so the policies can be used in your IaC.
+
+```yaml
+name: scan
+on:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    name: policy-scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+      - name: Install Slauth
+        run: npm install -g @slauth.io/slauth
+      - name: Run Slauth
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: slauth scan -p aws -o ./policies.json .
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: policies
+          path: policies.json
+```
+
 ## Development
 
 1. Set your `OPENAI_API_KEY` in the `.env` file at the root of the project
