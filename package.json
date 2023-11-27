@@ -1,6 +1,6 @@
 {
   "name": "@slauth.io/slauth",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "CLI that scans directories for usage of aws-sdk and generated IAM Policies",
   "main": "dist/index.js",
   "publishConfig": {
