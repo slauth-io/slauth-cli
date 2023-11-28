@@ -54,7 +54,9 @@ async function listFiles(directoryOrFilePath: string): Promise<string[]> {
     });
 }
 
-export default async function readDirectory(dirPath: string) {
+export default async function readDirectory(
+  dirPath: string
+): Promise<{ pageContent: string }[]> {
   const files = await listFiles(dirPath);
   const textSplitter =
     new LangChain.TextSplitters.RecursiveCharacterTextSplitter({

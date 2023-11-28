@@ -6,12 +6,9 @@ import showAsyncSpinner from '../utils/show-async-spinner';
 import { yellow, red, green } from '../utils/colors';
 import writeToFile from '../utils/write-to-file';
 import isGitRepository from '../utils/is-git-repository';
-import {
-  getStatementsFromCode,
-  getPoliciesFromStatements,
-  CloudProviders,
-  OpenAIModels,
-} from '@slauth.io/langchain-wrapper';
+import { CloudProviders, OpenAIModels } from '@slauth.io/langchain-wrapper';
+import ScannerStrategies from '../utils/scanner-strategies';
+import Scanner from '../utils/scanner';
 
 const scanCommand = new Command();
 scanCommand
@@ -39,20 +36,20 @@ scanCommand
   .action(async (pathArg, { cloudProvider, openaiModel, outputFile }) => {
     try {
       const fullPath = path.resolve(process.cwd(), pathArg);
-      const policies = await scan(fullPath, cloudProvider, openaiModel);
+      const result = await scan(fullPath, cloudProvider, openaiModel);
 
-      if (policies) {
-        const policiesJsonString = JSON.stringify(policies, null, 2);
+      if (result) {
+        const resultJSONString = JSON.stringify(result, null, 2);
 
         if (outputFile) {
           const fullOutFilePath = path.resolve(process.cwd(), outputFile);
-          await writeToFile(fullOutFilePath, policiesJsonString);
+          await writeToFile(fullOutFilePath, resultJSONString);
           console.log(`${green('Wrote to file:')} ${fullOutFilePath}`);
           return;
         }
 
-        console.log(green('Detected Policies:\n'));
-        console.log(policiesJsonString);
+        console.log(green(`Detected ${getResultType(cloudProvider)}:\n`));
+        console.log(resultJSONString);
       } else {
         console.log(yellow('No policies have been detected'));
       }
@@ -60,6 +57,17 @@ scanCommand
       console.error(red(err));
     }
   });
+
+function getResultType(cloudProvider: keyof typeof CloudProviders) {
+  switch (cloudProvider) {
+    case 'aws':
+      return 'Policies';
+    case 'gcp':
+      return 'Permissions';
+    default:
+      return 'Result';
+  }
+}
 
 async function scan(
   fullPath: string,
@@ -80,47 +88,9 @@ async function scan(
     readDirectoryPromise
   );
 
-  const fileDocs = await readDirectoryPromise;
-
-  const statementsPromises = Promise.all(
-    fileDocs.map(async doc => {
-      return await getStatementsFromCode(
-        doc.pageContent,
-        cloudProvider,
-        modelName
-      );
-    })
-  );
-
-  await showAsyncSpinner(
-    {
-      spinner: spinners.dots,
-      text: yellow(
-        'Scanning for aws-sdk calls (this process might take a few minutes)'
-      ),
-    },
-    statementsPromises
-  );
-
-  const statements = (await statementsPromises).flat();
-
-  const policiesPromise = getPoliciesFromStatements(
-    statements,
-    cloudProvider,
-    modelName
-  );
-
-  await showAsyncSpinner(
-    {
-      spinner: spinners.dots,
-      text: yellow(
-        'Generating policies (this process might take a few minutes)'
-      ),
-    },
-    policiesPromise
-  );
-
-  return await policiesPromise;
+  const scanner = new Scanner(ScannerStrategies[cloudProvider]);
+  const codeSnippets = (await readDirectoryPromise).map(doc => doc.pageContent);
+  return await scanner.scan(codeSnippets, modelName);
 }
 
 export default scanCommand;

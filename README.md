@@ -1,6 +1,6 @@
 # <p align="center"><img src="./static/images/slauth-logo.png" alt="slauth.io logo"/></p>
 
-CLI that scans repositories and generates the necessary IAM Policies for the service to run.
+CLI that scans repositories and generates the necessary IAM Permissions for the service to run.
 
 If you need any help getting started or have any questions, please join our [Slack Community](https://join.slack.com/t/slauthiocommunity/shared_invite/zt-268nxuwyd-Vav8lYJdiP44Kt8lQSSybg)
 
@@ -19,19 +19,19 @@ npm install -g @slauth.io/slauth
 
 #### Scan command
 
-The scan command will look for any `aws-sdk` calls in your git repository and generate the necessary policies for it.
+The scan command will look for any calls of your Cloud Provider `sdk` in your git repository and generate the necessary permissions for it.
 
 ```bash
 slauth scan -p aws ../path/to/my/repository
 ```
 
-> Note: By default the `scan` command will print the generated policies to `stdout`. Use `-o,--output-file` option to specify a file to output to.
+> Note: By default the `scan` command will print the result to `stdout`. Use `-o,--output-file` option to specify a file to output to.
 
 **Result:**
 
-The result of the scan command is an array of AWS IAM Policy Documents.
-If the resource is not explicit in the code (e.g. comes from a variable), we use a placholder for it.
-Before deploying the policies, you will have to **manually** change these placeholders with the correct resources the service will try to interact with.
+The result of the scan command is an array of IAM Permissions.
+
+> Note: For `aws` cloud provider, if the resource is not explicit in the code (e.g. comes from a variable), we use a placholder for it. Before deploying the policies, you will have to **manually** change these placeholders with the correct resources the service will try to interact with.
 
 ```bash
 Detected Policies:
@@ -93,7 +93,7 @@ Detected Policies:
 
 ##### Available options
 
-- `-p, --cloud-provider <cloudProvider>` select the cloud provider you would like to generate policies for (choices: "aws")
+- `-p, --cloud-provider <cloudProvider>` select the cloud provider you would like to generate policies for (choices: "aws", "gcp")
 - `-m, --openai-model <openaiModel>` select the openai model to use (choices: "gpt-3.5-turbo-16k", "gpt-4-32k")
 - `-o, --output-file <outputFile>` write generated policies to a file instead of stdout
 
@@ -118,7 +118,7 @@ Slauth being a CLI, it can be easily integrated in your CI/CD pipelines.
 
 #### Github Action Example
 
-In this GitHub action workflow we install Slauth, run it and then output the resulting policies to an artifact which can then be downloaded so the policies can be used in your IaC.
+In this GitHub action workflow we install Slauth, run it and then output the result to an artifact which can then be downloaded so it can be used in your IaC.
 
 ```yaml
 name: scan
