@@ -1,8 +1,20 @@
-# <p align="center"><img src="./static/images/slauth-logo.png" alt="slauth.io logo"/></p>
-
-CLI that scans repositories and generates the necessary IAM Permissions for the service to run.
-
-If you need any help getting started or have any questions, please join our [Slack Community](https://join.slack.com/t/slauthiocommunity/shared_invite/zt-268nxuwyd-Vav8lYJdiP44Kt8lQSSybg)
+<p align="center"><img src="./static/images/slauth-logo.png" alt="slauth.io logo"/></p>
+<p align="center">
+  CLI that scans repositories and generates the necessary IAM Permissions for the service to run.
+  <br>
+  <a href="https://github.com/slauth-io/slauth-cli/issues/new?assignees=&labels=bug&projects=&template=bug_report.md&title=">Report bug</a>
+  ·
+  <a href="https://github.com/slauth-io/slauth-cli/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.md&title=">Feature request</a>
+  ·
+  <a href="https://blog.slauth.io/">Slauth.io blog</a>
+  <br>
+  <br>
+  🤩
+  <br>
+  We're always open to feedback!
+  <br>
+  If you have any or are in need of some help, please join our Slack community <a href="https://join.slack.com/t/slauthiocommunity/shared_invite/zt-268nxuwyd-Vav8lYJdiP44Kt8lQSSybg">Slack Community</a>
+</p>
 
 ## Installation
 
