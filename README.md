@@ -13,7 +13,7 @@
   <br>
   We're always open to feedback!
   <br>
-  If you have any or are in need of some help, please join our Slack community <a href="https://join.slack.com/t/slauthiocommunity/shared_invite/zt-268nxuwyd-Vav8lYJdiP44Kt8lQSSybg">Slack Community</a>
+  If you have any or are in need of some help, please join our <a href="https://join.slack.com/t/slauthiocommunity/shared_invite/zt-268nxuwyd-Vav8lYJdiP44Kt8lQSSybg">Slack Community</a>
 </p>
 
 ## Installation
