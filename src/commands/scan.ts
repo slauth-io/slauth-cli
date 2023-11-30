@@ -63,7 +63,7 @@ function getResultType(cloudProvider: keyof typeof CloudProviders) {
     case 'aws':
       return 'Policies';
     case 'gcp':
-      return 'Permissions';
+      return 'Custom Roles';
     default:
       return 'Result';
   }
