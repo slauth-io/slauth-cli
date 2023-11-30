@@ -15,9 +15,9 @@ npm install -g @slauth.io/slauth
 1. Set the `OPENAI_API_KEY` environment variable: `export OPENAI_API_KEY=<key>`
 2. Run `slauth --help` to see available commands
 
-### Examples
+### Commands
 
-#### Scan command
+#### Scan
 
 The scan command will look for any calls of your Cloud Provider `sdk` in your git repository and generate the necessary permissions for it.
 
@@ -97,7 +97,7 @@ Detected Policies:
 - `-m, --openai-model <openaiModel>` select the openai model to use (choices: "gpt-3.5-turbo-16k", "gpt-4-32k")
 - `-o, --output-file <outputFile>` write generated policies to a file instead of stdout
 
-### Selecting which OpenAI Model to use
+#### Selecting which OpenAI Model to use
 
 By default `slauth` will use `gpt-4-32k` as it provides the best results. You can still choose to use other models to scan you repo, specially if cost is a concern:
 
@@ -109,8 +109,15 @@ slauth scan -p aws -m gpt-3.5-turbo-16k ./path/to/my/repository
 
 Available models:
 
-- `gpt-3.5-turbo-16k`
+- `gpt-3.5-turbo-16k` (results with this model might be incomplete)
 - `gpt-4-32k` (default)
+
+#### Example repos to test with
+
+In case you want to give the CLI a quick test you can fork the following repositories.
+
+- aws-sdk: <https://github.com/slauth-io/aws-sdk-tester>
+- google-cloud sdk: <https://github.com/slauth-io/gcp-sdk-tester>
 
 ### Running in CI/CD
 
