@@ -24,6 +24,21 @@ export default class GCPScanner implements ScannerStrategy {
 
     const permissions = (await permissionsPromise).flat();
 
-    return permissions.length ? permissions : undefined;
+    const customRolesPromise = Services.gcp.getCustomRolesFromPermissions(
+      permissions,
+      modelName
+    );
+
+    await showAsyncSpinner(
+      {
+        spinner: spinners.dots,
+        text: yellow(
+          'Generating custom roles (this process might take a few minutes)'
+        ),
+      },
+      customRolesPromise
+    );
+
+    return await customRolesPromise;
   }
 }
