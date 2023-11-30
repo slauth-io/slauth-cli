@@ -14,6 +14,11 @@
   We're always open to feedback!
   <br>
   If you have any or are in need of some help, please join our <a href="https://join.slack.com/t/slauthiocommunity/shared_invite/zt-268nxuwyd-Vav8lYJdiP44Kt8lQSSybg">Slack Community</a>
+  <br>
+  <br>
+  <img alt="NPM Downloads" src="https://img.shields.io/npm/dw/@slauth.io/slauth" />
+  <img alt="GitHub issues" src="https://img.shields.io/github/issues/slauth-io/slauth-cli" />
+  <img alt="NPM License" src="https://img.shields.io/npm/l/@slauth.io/slauth" />
 </p>
 
 ## Installation

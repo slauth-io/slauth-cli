@@ -28,8 +28,10 @@
   "keywords": [
     "cli",
     "aws",
+    "gcp",
     "iam",
     "policies",
+    "permissions",
     "llm",
     "openai"
   ],
