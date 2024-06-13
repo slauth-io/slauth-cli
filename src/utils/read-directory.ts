@@ -30,6 +30,7 @@ async function listFiles(directoryOrFilePath: string): Promise<string[]> {
         // escape regex special characters that might be in the extension
         return ext.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
       })
+      .concat(['.az'])  // Assuming '.az' as Azure-specific file extension
       .join('|');
 
     const EXT_REGEX = new RegExp(`.*(${EXT_REGEX_PARTIAL})$`, 'g');
