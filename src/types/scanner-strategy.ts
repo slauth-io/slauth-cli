@@ -1,4 +1,3 @@
-
 export default interface ScannerStrategy {
   scan(
     codeSnippets: string[],

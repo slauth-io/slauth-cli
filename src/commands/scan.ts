@@ -89,7 +89,7 @@ async function scan(
   );
 
   const scanner = new Scanner(ScannerStrategies[cloudProvider]);
-  const codeSnippets = (await readDirectoryPromise).map((doc) => doc.pageContent);
+  const codeSnippets = (await readDirectoryPromise).map(doc => doc.pageContent);
   return await scanner.scan(codeSnippets, modelName);
 }
 

@@ -7,10 +7,7 @@ export default class Scanner {
     this.strategy = strategy;
   }
 
-  public async scan(
-    codeSnippets: string[],
-    modelName?: string
-  ) {
+  public async scan(codeSnippets: string[], modelName?: string) {
     return await this.strategy.scan(codeSnippets, modelName);
   }
 }
