@@ -1,4 +1,3 @@
-import { OpenAIModels } from '@slauth.io/langchain-wrapper';
 import ScannerStrategy from '../types/scanner-strategy';
 
 export default class Scanner {
@@ -10,7 +9,7 @@ export default class Scanner {
 
   public async scan(
     codeSnippets: string[],
-    modelName?: keyof typeof OpenAIModels
+    modelName?: string
   ) {
     return await this.strategy.scan(codeSnippets, modelName);
   }

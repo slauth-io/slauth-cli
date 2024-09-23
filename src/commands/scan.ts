@@ -6,18 +6,18 @@ import showAsyncSpinner from '../utils/show-async-spinner';
 import { yellow, red, green } from '../utils/colors';
 import writeToFile from '../utils/write-to-file';
 import isGitRepository from '../utils/is-git-repository';
-import { CloudProviders, OpenAIModels } from '@slauth.io/langchain-wrapper';
+import { CloudProviders } from '@slauth.io/langchain-wrapper';
 import ScannerStrategies from '../utils/scanner-strategies';
 import Scanner from '../utils/scanner';
 
 const scanCommand = new Command();
 scanCommand
   .name('scan')
-  .description('scan a repository and generate least priviledge policies')
+  .description('Scan a repository and generate least privilege policies')
   .addOption(
     new Option(
       '-p, --cloud-provider <cloudProvider>',
-      'select the cloud provider you would like to generate policies for'
+      'Select the cloud provider you would like to generate policies for'
     )
       .choices(Object.values(CloudProviders))
       .makeOptionMandatory(true)
@@ -25,14 +25,14 @@ scanCommand
   .addOption(
     new Option(
       '-m, --openai-model <openaiModel>',
-      'select the openai model to use'
-    ).choices(Object.values(OpenAIModels))
+      'Specify the OpenAI model to use (e.g., "gpt-3.5-turbo", "gpt-4")'
+    )
   )
   .option(
     '-o, --output-file <outputFile>',
-    'write generated policies to a file instead of stdout'
+    'Write generated policies to a file instead of stdout'
   )
-  .argument('<path>', 'repository path')
+  .argument('<path>', 'Repository path')
   .action(async (pathArg, { cloudProvider, openaiModel, outputFile }) => {
     try {
       const fullPath = path.resolve(process.cwd(), pathArg);
@@ -72,7 +72,7 @@ function getResultType(cloudProvider: keyof typeof CloudProviders) {
 async function scan(
   fullPath: string,
   cloudProvider: keyof typeof CloudProviders,
-  modelName?: keyof typeof OpenAIModels
+  modelName?: string
 ) {
   if (!isGitRepository(fullPath)) {
     throw new Error('Directory needs to be a Git repository');
@@ -89,7 +89,7 @@ async function scan(
   );
 
   const scanner = new Scanner(ScannerStrategies[cloudProvider]);
-  const codeSnippets = (await readDirectoryPromise).map(doc => doc.pageContent);
+  const codeSnippets = (await readDirectoryPromise).map((doc) => doc.pageContent);
   return await scanner.scan(codeSnippets, modelName);
 }
 

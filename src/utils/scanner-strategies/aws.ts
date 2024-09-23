@@ -1,13 +1,13 @@
-import { OpenAIModels, Services } from '@slauth.io/langchain-wrapper';
+import { Services } from '@slauth.io/langchain-wrapper';
 import ScannerStrategy from '../../types/scanner-strategy';
 import showAsyncSpinner from '../show-async-spinner';
 import spinners from 'cli-spinners';
 import { yellow } from '../colors';
 
 export default class AWSScanner implements ScannerStrategy {
-  async scan(codeSnippets: string[], modelName: keyof typeof OpenAIModels) {
+  async scan(codeSnippets: string[], modelName?: string) {
     const statementsPromises = Promise.all(
-      codeSnippets.map(async snippet => {
+      codeSnippets.map(async (snippet) => {
         return await Services.aws.getStatementsFromCode(snippet, modelName);
       })
     );
