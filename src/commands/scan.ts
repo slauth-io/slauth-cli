@@ -10,6 +10,7 @@ import { CloudProviders } from '@slauth.io/langchain-wrapper';
 import ScannerStrategies from '../utils/scanner-strategies';
 import Scanner from '../utils/scanner';
 
+//Added a new string to the model name parameter
 const scanCommand = new Command();
 scanCommand
   .name('scan')
